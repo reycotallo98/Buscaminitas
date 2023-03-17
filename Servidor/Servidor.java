@@ -25,10 +25,19 @@ public void run() {
 		while(jugador1.turno != true) {
 			jugador2.turno = true;
 			jugador1.tablero = jugador2.tablero;
+			if(jugador1.ganador == false) {
+				jugador2.ganar();
+				jugador1.perder();
+			}
 		}
 		while(jugador2.turno != true) {
 			jugador1.turno = true;
 			jugador2.tablero = jugador1.tablero;
+			if(jugador2.ganador == false) {
+				jugador2.perder();
+				jugador1.ganar();
+				
+			}
 		}
 		
 	}

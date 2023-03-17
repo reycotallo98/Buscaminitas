@@ -1,21 +1,27 @@
 package Servidor;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+
 import Servidor.*;
 
 public class Jugador implements Runnable {
 
 	
-	InetAddress Ip;
+	static InetAddress Ip;
 	Boolean turno;
 	DatagramSocket server;
 	int puerto;
 	Integer[][] tablero;
+	Integer[][] tableroOculto;
+	boolean ganador = true;
 	public Jugador(InetAddress ip, Boolean turno, DatagramSocket server, int i) {
 		super();
 		Ip = ip;
@@ -46,10 +52,10 @@ public class Jugador implements Runnable {
 	
 	
 
-	private String[] contar(int x, int y) {
+	private int contar(int x, int y) {
 		// TODO Auto-generated method stub
 		int contador = 0;
-		String revelad0 ="";
+		
 		for (int i = -1; i < 1; i++) {
 			for (int j = -1; j < 1; j++) {
 				
@@ -63,59 +69,61 @@ public class Jugador implements Runnable {
 				for (int i = -1; i < 1; i++) {
 					for (int j = -1; j < 1; j++) {
 						
-						revelad0 =revelar(x+i,y+j);
+						revelar(x+i,y+j);
 					}
 			}}
 		
-		String[] a = {contador+"",revelad0};
-		return a;
+		return contador;
+	
 	}
-	private String revelar(int i,int o) {
-		// TODO Auto-generated method stub
-		String celdas="";
-		String[] contado = contar(i,o);
-		String cont = contado[0];
-		if (cont.equals("0")) {
-			celdas = contado[1]+i+","+o+"-";
-			tablero[i][o] = 0;
+	private void revelar(int i,int o) {
+		int contado = contar(i,o);
+		
+		if (contado == 0) {
+			tableroOculto[i][o] = 0;
 		}
-		return cont;
+		
 	}
+	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		Socket socket;
-		byte[] mensaje="empieza".getBytes();
+	
+		for (int i = 0; i < tableroOculto.length; i++) {
+			for (int j = 0; j < tableroOculto.length; j++) {
+			tableroOculto[i][j] = -3;
+
+			}
+			}
 	      
 	      //ENVIO DATAGRAMA AL CLIENTE
-	      DatagramPacket paqEnviado=new DatagramPacket(mensaje,mensaje.length,Ip,puerto);
-	      byte[] recibidos=new byte[1024];
-		    byte[] enviados=new byte[1024];
-		    
+		enviarMensaje("empieza");
 	      while(true){
+	    	  if(!ganador) {
+	    		  break;
+	    	  }
 	    	  if (turno) {
-	    		  try {
-	  				socket = new Socket(server.getInetAddress(),server.getPort());
-	  			
-	  				ObjectOutputStream objeto = new ObjectOutputStream(socket.getOutputStream());
-	  				objeto.writeObject(tablero);
-	  			} catch (IOException e) {
-	  				// TODO Auto-generated catch block
-	  				e.printStackTrace();
-	  			
+	    		  
+	    		 
+	    		 
+				
+	    	  try {
+					actualizarTablero();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-	    	  mensaje = "mueve".getBytes();
-	    	  paqEnviado=new DatagramPacket(mensaje,mensaje.length,Ip,puerto);
+	    	  enviarMensaje("mueve");
 	    	  
 		      System.out.println(" Esperando Datagrama...");
 		      // RECIBO DATAGRAMA
-		      recibidos=new byte[1024]; // prueba a comentarlo y ve el fallo
-		      DatagramPacket paqRecibido=new DatagramPacket(recibidos,recibidos.length);  
-		      try {
-				server.receive(paqRecibido);
-			} catch (IOException e) {
+		     
+		      DatagramPacket paqRecibido = null;
+			try {
+				paqRecibido = recibirmensaje();
+			} catch (SocketException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
 		      
 		      String cadena=new String(paqRecibido.getData());
@@ -130,54 +138,32 @@ public class Jugador implements Runnable {
 		    	 
 		       
 		      
-		      }}}
-		      
+		      }
+		      try {
+				actualizarTablero();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	  
+	    	  }}
+	}
 	      
 		
-	}
+	
+	
+	
 	private void movimiento(int x, int y) {
 		// TODO Auto-generated method stub
-		 byte[] mensaje;
-		 DatagramPacket paqEnviado;
 		 
-		switch (tablero[x][y]) {
-			case -1: {
-				
-				mensaje = ("movimiento:"+x+","+y+"-bomba").getBytes();
-				paqEnviado=new DatagramPacket(mensaje,mensaje.length,Ip,puerto);
-				try {
-					server.send(paqEnviado);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				turno = false;
-			}
-			case -2:
-				String[] a = contar(x,y);
-				mensaje = ("movimiento:"+x+y+"-numeroBombas."+a[0]).getBytes();
-				paqEnviado=new DatagramPacket(mensaje,mensaje.length,Ip,puerto);
-				try {
-					server.send(paqEnviado);
-					tablero[x][y] = Integer.parseInt(a[0]);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(a[1].length()!=0) {
-				mensaje = ("revelado:"+a[1]).getBytes();
-				paqEnviado=new DatagramPacket(mensaje,mensaje.length,Ip,puerto);
-				try {
-					server.send(paqEnviado);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}}
-			     turno = false;
-			
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + tablero[x][y]);
-		}
+		 tableroOculto[x][y]= contar(x,y);
+		 if (tablero[x][y] == -1) {
+			 
+			 enviarMensaje("bomba");
+		 }else {
+			 enviarMensaje("np");
+		 }
+		
 		
 		       
 		
@@ -185,5 +171,94 @@ public class Jugador implements Runnable {
 		      }
 			      
 		       
+	public void actualizarTablero() throws IOException {
+		 // Creamos el socket y establecemos la conexión con el servidor
+        Socket socket = new Socket(Ip, 3300);
+        
+        // Creamos el objeto de salida de datos en el socket
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        
+        // Recorremos el array de arrays de enteros y escribimos cada elemento en el objeto de salida de datos
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[i].length; j++) {
+                out.writeInt(tableroOculto[i][j]);
+            }
+        }
+        
+        // Cerramos el objeto de salida de datos y el socket
+        out.close();
+        socket.close();
+        System.out.println("actualizo a "+Ip.toString());
+	}
+	private static DatagramPacket recibirmensaje() throws SocketException {
+		
+	    byte[] buffer = new byte[1024];
+	    String mensaje = "";
+	    DatagramSocket socket = new DatagramSocket(3000);
+        
+        // Crea un objeto DatagramPacket que se utilizará para almacenar los datos recibidos
+        DatagramPacket paquete = new DatagramPacket(buffer, buffer.length);
+        
+	    try {
+	        // Crea un objeto DatagramSocket que se utilizará para recibir paquetes de datos
+	        
+	        // Utiliza el método receive del objeto DatagramSocket para recibir el paquete de datos
+	        socket.receive(paquete);
+	        
+	        // Convierte los datos recibidos en el tipo de dato adecuado para su procesamiento
+	        byte[] datosRecibidos = Arrays.copyOfRange(paquete.getData(), 0, paquete.getLength());
+	        mensaje = new String(datosRecibidos);
+	        
+	        // Imprime el mensaje recibido
+	        System.out.println("Mensaje recibido: " + mensaje);
+	        
+	        // Cierra el objeto DatagramSocket
+	        socket.close();
+	        
+	    } catch (Exception e) {
+	        System.out.println("Error al recibir el mensaje: " + e.getMessage());
+	    }
+		return paquete;
+	}
+
+	private static void enviarMensaje(String mensaje) {
+		
+		
+	    byte[] datos = mensaje.getBytes();
+	    
+	    try {
+	        // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
+	        DatagramSocket socket = new DatagramSocket();
+	        
+	        // Crea un objeto InetAddress que represente la dirección IP del destinatario
+	        InetAddress direccionDestinatario = Ip;
+	        
+	        // Crea un objeto DatagramPacket que contenga los datos a enviar, la dirección IP y el puerto del destinatario
+	        DatagramPacket paquete = new DatagramPacket(datos, datos.length, direccionDestinatario, 3000);
+	        
+	        // Utiliza el método send del objeto DatagramSocket para enviar el paquete de datos al destinatario
+	        socket.send(paquete);
+	        
+	        // Cierra el objeto DatagramSocket
+	        socket.close();
+	        System.out.println("enviado");
+	    } catch (SocketException e) {
+	        System.out.println("Error al crear el objeto DatagramSocket: " + e.getMessage());
+	    } catch (UnknownHostException e) {
+	        System.out.println("Error al obtener la dirección IP del destinatario: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("Error al enviar el mensaje: " + e.getMessage());
+	    }
+	}
+
 	
+	
+	public void perder() {
+		enviarMensaje("resultado:perdido");
+		
+	}
+	public void ganar() {
+		enviarMensaje("ganado");
+		ganador = !ganador;
+	}
 	}
