@@ -17,7 +17,8 @@ public class Inicio {
 	    boolean turno = false;
 		try (DatagramSocket serverSocket = new DatagramSocket(3000)) {
 			InetSocketAddress ip = new InetSocketAddress("nube5.anti-palilleros.com", 3000);
-System.out.println("Conectado");
+String ipclean = ip.toString().substring(ip.toString().indexOf('/')+1,ip.toString().indexOf(':'));
+			System.out.println("Conectado");
 			for (int i = 0; i < array.length; i++) {
 for (int j = 0; j < array.length; j++) {
 array[i][j] = -3;
@@ -35,8 +36,6 @@ System.out.println("Conectado");
 // TODO Auto-generated catch block
 e.printStackTrace();
 }
-Socket socket = new Socket(serverSocket.getInetAddress(),serverSocket.getPort());
-ObjectInputStream objeto = new ObjectInputStream(socket.getInputStream());
 
 
 
@@ -55,15 +54,15 @@ if (cadena.contains("empieza")){
 
 
 while(true) {
-	try {
-		array = (Integer[][]) objeto.readObject();
-	} catch (ClassNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	
+//	try {
+//		//array = (Integer[][]) objeto.readObject();
+//	} catch (ClassNotFoundException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}	
 	tablero = new Tablero(array, turno);
 
 paqRecibido=new DatagramPacket(recibidos,recibidos.length);  
@@ -120,15 +119,16 @@ if(cadena.contains("mueve")) {
 //		array[integers[0]][integers[1]] = 0;
 //	}
 	}else {
-		try {
-			array = (Integer[][]) objeto.readObject();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	}
+//		try {
+//			//array = (Integer[][]) objeto.readObject();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		}
 }
 		
 		
