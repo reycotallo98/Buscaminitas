@@ -27,7 +27,7 @@ public class Inicio {
 	    byte[] enviados=new byte[1024];
 	    String cadena;
 	    boolean turno = false;
-		boolean jugando = false;
+		
 			for (int i = 0; i < array.length; i++) {
 for (int j = 0; j < array.length; j++) {
 array[i][j] = -3;
