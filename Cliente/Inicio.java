@@ -21,11 +21,11 @@ import javax.swing.JOptionPane;
 
 public class Inicio {
   private static DatagramSocket server;
-  private static ServerSocket serverSocket;
+  private static Integer[][] array = new Integer[8][8];
 public static void main(String[] args) throws IOException, URISyntaxException {
 	 server = new DatagramSocket(3000);
-	 ServerSocket serverSocket = new ServerSocket(3300);
-	 Integer[][] array = new Integer[8][8];
+	 new ServerSocket(3300);
+	 
 	  byte[] recibidos=new byte[1024];
 	    byte[] enviados=new byte[1024];
 	    String cadena;
@@ -59,7 +59,7 @@ while(true) {
 	System.out.println("Empiezo");
 
 	
-	array = actualizartablero();
+	actualizartablero();
 	tablero = new Tablero(array, turno);
 
 
@@ -128,30 +128,27 @@ while(true) {
   
   
   
-private static Integer[][] actualizartablero () throws IOException {
+private static void actualizartablero () throws IOException {
 	   
-		Socket socket = serverSocket.accept();
-		   
-		   // Creamos el objeto de entrada de datos en el socket del cliente
-		   DataInputStream in = new DataInputStream(socket.getInputStream());
-		   
-		   // Leemos los datos del objeto de entrada de datos y los asignamos a un nuevo array de arrays de enteros
-		   Integer[][] array = new Integer[8][8];
-		   for (int i = 0; i < array.length; i++) {
-		       for (int j = 0; j < array[i].length; j++) {
-		           array[i][j] = in.readInt();
-		       }
-		   }
-		   
-		   // Cerramos el objeto de entrada de datos y el socket del cliente
-		   in.close();
-		   
-		   
-		   // Imprimimos el array de arrays de enteros recibido para verificar que se ha recibido correctamente
-		   System.out.println("actualizado");
-		   return array;
+		for (int i = 0; i < array.length; i++) {
+	String a = recibirmensaje();
+			for (int j = 0; j < array.length; j++) {
+				int contador = 0;
+				String num="";
+				while (a.charAt(contador) != '-' || contador+1 > a.length()) {
+					
+					num+=a.charAt(contador);
+					contador++;
+				}
+				a.split(num+'-');
+				array[i][j] = Integer.parseInt(num);
+			}
+			
+		}
+		}
+		  
 	   
-   }
+   
 
 private static String recibirmensaje() {
 	

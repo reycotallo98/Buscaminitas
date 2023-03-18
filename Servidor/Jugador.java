@@ -174,22 +174,15 @@ public class Jugador implements Runnable {
 		       
 	public void actualizarTablero() throws IOException {
 		 // Creamos el socket y establecemos la conexión con el servidor
-        Socket socket = new Socket(Ip, 3300);
-        
-        // Creamos el objeto de salida de datos en el socket
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        
-        // Recorremos el array de arrays de enteros y escribimos cada elemento en el objeto de salida de datos
-        for (int i = 0; i < tablero.size(); i++) {
-            for (int j = 0; j < tablero.get(i).size(); j++) {
-                out.writeInt(tableroOculto.get(i).get(j));
-            }
-        }
-        
-        // Cerramos el objeto de salida de datos y el socket
-        out.close();
-        socket.close();
-        System.out.println("actualizo a "+Ip.toString());
+        for (ArrayList<Integer> arrayList : tablero) {
+			String enviado="";
+        	for (Integer integer : arrayList) {
+				enviado += integer;
+				enviado += "-";
+			}
+        	
+        	enviarMensaje(enviado);
+		}
 	}
 	private static DatagramPacket recibirmensaje() throws SocketException {
 		
