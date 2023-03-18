@@ -17,10 +17,11 @@ public class Jugador implements Runnable {
 	
 	static InetAddress Ip;
 	Boolean turno;
-	DatagramSocket server;
+	public static DatagramSocket server;
 	int puerto;
 	Integer[][] tablero;
 	Integer[][] tableroOculto;
+	
 	boolean ganador = true;
 	public Jugador(InetAddress ip, Boolean turno, DatagramSocket server, int i) {
 		super();
@@ -84,7 +85,6 @@ public class Jugador implements Runnable {
 		}
 		
 	}
-	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -128,12 +128,12 @@ public class Jugador implements Runnable {
 		      
 		      String cadena=new String(paqRecibido.getData());
 		      if(cadena.contains("movimiento") && turno && paqRecibido.getAddress().equals(Ip)) {
-		    	  int x = Integer.parseInt(cadena.substring(cadena.indexOf(':'), cadena.indexOf('-')));
-		       int y = Integer.parseInt(cadena.substring(cadena.indexOf('-')));
+		    	  int x = Integer.parseInt(cadena.substring(cadena.indexOf(':')+1, cadena.indexOf('-')));
+		       int y = Integer.parseInt(cadena.substring(cadena.indexOf('-')+1));
 		       
 		       movimiento(x, y);
 		      
-		    
+		    turno =!turno;
 			
 		    	 
 		       
@@ -194,8 +194,8 @@ public class Jugador implements Runnable {
 		
 	    byte[] buffer = new byte[1024];
 	    String mensaje = "";
-	    DatagramSocket socket = new DatagramSocket(3000);
-        
+	    
+        DatagramSocket socket = server;
         // Crea un objeto DatagramPacket que se utilizará para almacenar los datos recibidos
         DatagramPacket paquete = new DatagramPacket(buffer, buffer.length);
         
@@ -228,7 +228,7 @@ public class Jugador implements Runnable {
 	    
 	    try {
 	        // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
-	        DatagramSocket socket = new DatagramSocket();
+	        DatagramSocket socket = server;
 	        
 	        // Crea un objeto InetAddress que represente la dirección IP del destinatario
 	        InetAddress direccionDestinatario = Ip;

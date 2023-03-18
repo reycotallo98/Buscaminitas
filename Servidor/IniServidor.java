@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import Servidor.*;
 public class IniServidor {
-    
+	static DatagramSocket serverSocket;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		DatagramSocket serverSocket = new DatagramSocket(3000);
+	serverSocket = new DatagramSocket(3000);
 		//DatagramSocket serverSocket=new DatagramSocket(3000,InetAddress.getByName("192.168.204.1"));    
 
 	    String cadena;
@@ -75,7 +76,7 @@ private static DatagramPacket recibirmensaje() throws SocketException {
     byte[] buffer = new byte[1024];
     String mensaje = "";
  // Crea un objeto DatagramSocket que se utilizará para recibir paquetes de datos
-    DatagramSocket socket = new DatagramSocket(3000);
+    DatagramSocket socket = serverSocket;
     
     // Crea un objeto DatagramPacket que se utilizará para almacenar los datos recibidos
     DatagramPacket paquete = new DatagramPacket(buffer, buffer.length);
@@ -108,7 +109,7 @@ private static void enviarMensaje(String mensaje) {
     
     try {
         // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
-        DatagramSocket socket = new DatagramSocket();
+        DatagramSocket socket = serverSocket;
         
         // Crea un objeto InetAddress que represente la dirección IP del destinatario
         InetAddress direccionDestinatario = InetAddress.getByName("nube5.anti-palilleros.com");
