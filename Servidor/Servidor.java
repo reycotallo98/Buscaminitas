@@ -1,16 +1,18 @@
 package Servidor;
+import java.util.ArrayList;
+
 import Servidor.*;
 
 public class Servidor implements Runnable {
 	// Si no quiero limitar la escucha a una interfaz
 Jugador jugador1;
 Jugador jugador2;
-Integer[][] tablero;
+ArrayList<ArrayList<Integer>> tablero;
 int players = 0;
-public Servidor( Integer[][] tablero) {
+public Servidor( ) {
 	super();
 	
-	this.tablero = tablero;
+	
 }
 @Override
 public void run() {

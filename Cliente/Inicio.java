@@ -42,24 +42,25 @@ System.out.println("Esperando oponente....");
 
 
 
-cadena= recibirmensaje(); 
-  
-if (cadena.contains("empieza")){
-	jugando = !jugando;
-System.out.println("Empiezo");
-}
 
 
 
 
 
-while(jugando) {
 
+while(true) {
+	cadena= recibirmensaje(); 
+	  
+	if (cadena.contains("empieza")){
+		
+	System.out.println("Empiezo");
+
+	
 	array = actualizartablero();
 	tablero = new Tablero(array, turno);
 
-cadena=recibirmensaje(); 
-if(cadena.contains("mueve")) {
+
+	}else if(cadena.contains("mueve")) {
   turno = true;
   
   
@@ -112,11 +113,11 @@ if(cadena.contains("mueve")) {
 //	for (Integer[] integers : au) {
 //		array[integers[0]][integers[1]] = 0;
 //	}
-	}
+	}}
 }
 		
 		
-		}
+		
   
   
   
@@ -155,7 +156,7 @@ private static String recibirmensaje() {
     String mensaje = "";
     try {
         // Crea un objeto DatagramSocket que se utilizará para recibir paquetes de datos
-        DatagramSocket socket = new DatagramSocket(3000);
+        DatagramSocket socket = new DatagramSocket(3300);
         
         // Crea un objeto DatagramPacket que se utilizará para almacenar los datos recibidos
         DatagramPacket paquete = new DatagramPacket(buffer, buffer.length);

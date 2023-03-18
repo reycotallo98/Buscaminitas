@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import Servidor.*;
@@ -19,8 +20,8 @@ public class Jugador implements Runnable {
 	Boolean turno;
 	public static DatagramSocket server;
 	int puerto;
-	Integer[][] tablero;
-	Integer[][] tableroOculto;
+	ArrayList<ArrayList<Integer>> tablero;
+	ArrayList<ArrayList<Integer>> tableroOculto;
 	
 	boolean ganador = true;
 	public Jugador(InetAddress ip, Boolean turno, DatagramSocket server, int i) {
@@ -60,7 +61,7 @@ public class Jugador implements Runnable {
 		for (int i = -1; i < 1; i++) {
 			for (int j = -1; j < 1; j++) {
 				
-			if(tablero[x+i][y+j] == -1 && i != 0 && j!=0) {
+			if(tablero.get(x+i).get(y+j) == -1 && i != 0 && j!=0) {
 				contador++;
 				
 			}
@@ -81,17 +82,17 @@ public class Jugador implements Runnable {
 		int contado = contar(i,o);
 		
 		if (contado == 0) {
-			tableroOculto[i][o] = 0;
+			tableroOculto.get(i).set(o,0) ;
 		}
 		
 	}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-	
-		for (int i = 0; i < tableroOculto.length; i++) {
-			for (int j = 0; j < tableroOculto.length; j++) {
-			tableroOculto[i][j] = -3;
+	    tableroOculto = tablero;
+		for (int i = 0; i < tableroOculto.size(); i++) {
+			for (int j = 0; j < tableroOculto.size(); j++) {
+			tableroOculto.get(i).set(j, -3);
 
 			}
 			}
@@ -156,8 +157,8 @@ public class Jugador implements Runnable {
 	private void movimiento(int x, int y) {
 		// TODO Auto-generated method stub
 		 
-		 tableroOculto[x][y]= contar(x,y);
-		 if (tablero[x][y] == -1) {
+		 tableroOculto.get(x).set(y,contar(x,y) );
+		 if (tablero.get(x).get(y) == -1) {
 			 
 			 enviarMensaje("bomba");
 		 }else {
@@ -179,9 +180,9 @@ public class Jugador implements Runnable {
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         
         // Recorremos el array de arrays de enteros y escribimos cada elemento en el objeto de salida de datos
-        for (int i = 0; i < tablero.length; i++) {
-            for (int j = 0; j < tablero[i].length; j++) {
-                out.writeInt(tableroOculto[i][j]);
+        for (int i = 0; i < tablero.size(); i++) {
+            for (int j = 0; j < tablero.get(i).size(); j++) {
+                out.writeInt(tableroOculto.get(i).get(j));
             }
         }
         
