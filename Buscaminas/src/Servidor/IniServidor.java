@@ -21,42 +21,50 @@ public class IniServidor {
 	    String cadena;
 
 	    ArrayList<Servidor> partidas = new ArrayList<>();
-	    
+	    partidas.add(new Servidor());
 	    while(true){
 	      System.out.println(" Esperando Datagrama...");
 	      // RECIBO DATAGRAMA
 	      DatagramPacket paqRecibido=recibirmensaje();
 	      cadena=new String(paqRecibido.getData());
 	      
-	      if (cadena.equals("q")) {
+	      if (cadena.contains("q")) {
 	      //DIRECCION ORIGEN
 	    	  Jugador nuevo = new Jugador(paqRecibido.getAddress(),false,serverSocket,paqRecibido.getPort());
+	    	  System.out.println("nuevo jugador");
 	    	  for(Servidor partida : partidas) {
 	    	  if (partida.players<2) {
 	    		  if(partida.players<1) {
 	    			  partida.jugador1=nuevo;  
-	    			  partida.players++;
-	    			  ArrayList<Integer[]> a = new ArrayList<>();
+	    			  partida.players = partida.players +1;
+	    			  System.out.println("Nueva partida");
+	    			  ArrayList<ArrayList<Integer>> a = new ArrayList<>();
 	    			  for(int i = 0; i < 8;i++ ) {
+	    				  ArrayList<Integer> ll = new ArrayList<>();
 	    				  for(int b = 0; b < 8;b++ ) {
-	    					  ArrayList<Integer> ll = new ArrayList<>();
+	    					  
 		    				  if(b < ((int)(Math.random()*7))) {
 		    					  ll.add(-1);
 		    				  }else {
 		    					  ll.add(-2);
 		    				  }
 		    				 Collections.shuffle(ll);
-		    				  a.add((Integer[]) ll.toArray());
+		    				  
 		    				  
 	    				  }
+	    				  a.add(ll);
 	    				  }
-	    			  partida.tablero = (Integer[][]) a.toArray();
+	    			  partida.tablero = a;
+	    			  
 	    			  break;
 	    		  }else if(partida.players<2){
 	    			  partida.jugador2=nuevo;
 	    			  partida.players++;
+	    			  partida.players = partida.players +1;
 	    			  partida.run();
 	    			  break;
+	    		  }else {
+	    			  partidas.add(new Servidor());
 	    		  }
 	    		
 	    		  
@@ -69,6 +77,7 @@ public class IniServidor {
 	    }
 		
 }
+	    
 	}
 
 private static DatagramPacket recibirmensaje() throws SocketException {
@@ -94,42 +103,12 @@ private static DatagramPacket recibirmensaje() throws SocketException {
         System.out.println("Mensaje recibido: " + mensaje);
         
         // Cierra el objeto DatagramSocket
-        socket.close();
+        return paquete;
         
     } catch (Exception e) {
         System.out.println("Error al recibir el mensaje: " + e.getMessage());
     }
 	return paquete;
-}
-
-private static void enviarMensaje(String mensaje) {
-	
-	
-    byte[] datos = mensaje.getBytes();
-    
-    try {
-        // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
-        DatagramSocket socket = serverSocket;
-        
-        // Crea un objeto InetAddress que represente la dirección IP del destinatario
-        InetAddress direccionDestinatario = InetAddress.getByName("nube5.anti-palilleros.com");
-        
-        // Crea un objeto DatagramPacket que contenga los datos a enviar, la dirección IP y el puerto del destinatario
-        DatagramPacket paquete = new DatagramPacket(datos, datos.length, direccionDestinatario, 3000);
-        
-        // Utiliza el método send del objeto DatagramSocket para enviar el paquete de datos al destinatario
-        socket.send(paquete);
-        
-        // Cierra el objeto DatagramSocket
-        socket.close();
-        System.out.println("enviado");
-    } catch (SocketException e) {
-        System.out.println("Error al crear el objeto DatagramSocket: " + e.getMessage());
-    } catch (UnknownHostException e) {
-        System.out.println("Error al obtener la dirección IP del destinatario: " + e.getMessage());
-    } catch (Exception e) {
-        System.out.println("Error al enviar el mensaje: " + e.getMessage());
-    }
 }
 
 }
