@@ -21,10 +21,11 @@ import javax.swing.JOptionPane;
 
 public class Inicio {
   private static DatagramSocket server;
-
+  private static ServerSocket serverSocket;
 public static void main(String[] args) throws IOException, URISyntaxException {
 	 server = new DatagramSocket(3000);
-	  Integer[][] array = new Integer[8][8];
+	 ServerSocket serverSocket = new ServerSocket(3300);
+	 Integer[][] array = new Integer[8][8];
 	  byte[] recibidos=new byte[1024];
 	    byte[] enviados=new byte[1024];
 	    String cadena;
@@ -128,7 +129,7 @@ while(true) {
   
   
 private static Integer[][] actualizartablero () throws IOException {
-	   try (ServerSocket serverSocket = new ServerSocket(3300)) {
+	   
 		Socket socket = serverSocket.accept();
 		   
 		   // Creamos el objeto de entrada de datos en el socket del cliente
@@ -144,12 +145,12 @@ private static Integer[][] actualizartablero () throws IOException {
 		   
 		   // Cerramos el objeto de entrada de datos y el socket del cliente
 		   in.close();
-		   socket.close();
+		   
 		   
 		   // Imprimimos el array de arrays de enteros recibido para verificar que se ha recibido correctamente
 		   System.out.println("actualizado");
 		   return array;
-	   }
+	   
    }
 
 private static String recibirmensaje() {
