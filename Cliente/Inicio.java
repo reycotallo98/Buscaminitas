@@ -20,14 +20,16 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Inicio {
-  public static void main(String[] args) throws IOException, URISyntaxException {
-	  
+  private static DatagramSocket server;
+
+public static void main(String[] args) throws IOException, URISyntaxException {
+	 server = new DatagramSocket(3000);
 	  Integer[][] array = new Integer[8][8];
 	  byte[] recibidos=new byte[1024];
 	    byte[] enviados=new byte[1024];
 	    String cadena;
 	    boolean turno = false;
-		
+		boolean jugando = false;
 			for (int i = 0; i < array.length; i++) {
 for (int j = 0; j < array.length; j++) {
 array[i][j] = -3;
@@ -156,7 +158,7 @@ private static String recibirmensaje() {
     String mensaje = "";
     try {
         // Crea un objeto DatagramSocket que se utilizará para recibir paquetes de datos
-        DatagramSocket socket = new DatagramSocket(3300);
+        DatagramSocket socket = server;
         
         // Crea un objeto DatagramPacket que se utilizará para almacenar los datos recibidos
         DatagramPacket paquete = new DatagramPacket(buffer, buffer.length);
@@ -165,14 +167,13 @@ private static String recibirmensaje() {
         socket.receive(paquete);
         
         // Convierte los datos recibidos en el tipo de dato adecuado para su procesamiento
-        byte[] datosRecibidos = Arrays.copyOfRange(paquete.getData(), 0, paquete.getLength());
-        mensaje = new String(datosRecibidos);
+        mensaje = new String(paquete.getData());
         
         // Imprime el mensaje recibido
         System.out.println("Mensaje recibido: " + mensaje);
         
         // Cierra el objeto DatagramSocket
-        socket.close();
+      
         
     } catch (Exception e) {
         System.out.println("Error al recibir el mensaje: " + e.getMessage());
@@ -187,7 +188,7 @@ private static void enviarMensaje(String mensaje) {
     
     try {
         // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
-        DatagramSocket socket = new DatagramSocket();
+        DatagramSocket socket = server;
         
         // Crea un objeto InetAddress que represente la dirección IP del destinatario
         InetAddress direccionDestinatario = InetAddress.getByName("nube5.anti-palilleros.com");
@@ -199,7 +200,7 @@ private static void enviarMensaje(String mensaje) {
         socket.send(paquete);
         
         // Cierra el objeto DatagramSocket
-        socket.close();
+      
         System.out.println("enviado");
     } catch (SocketException e) {
         System.out.println("Error al crear el objeto DatagramSocket: " + e.getMessage());
