@@ -66,8 +66,11 @@ while(true) {
 	}else if(cadena.contains("mueve")) {
   turno = true;
   tablero = new Tablero(array, turno);
+  while(!tablero.pulsado) {
+	 System.out.println("pulsa una tecla");
   
-  
+  }
+  enviarMensaje(tablero.movimiento);
 }else if(cadena.contains("resultado")){
 	
 	String men = cadena.substring(cadena.indexOf(":")+1);

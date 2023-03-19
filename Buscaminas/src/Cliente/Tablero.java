@@ -15,23 +15,28 @@ public class Tablero extends JFrame {
 	JButton boton[][];
 	ActionListener accion;
 	boolean activo;
-	boolean pulos = false;
+	
 	Integer[][] arr;
 	Font f;
 	int pulsadox;
 	int pulsadoy;
+	public String movimiento;
+	boolean pulsado;
 
 	public Tablero(Integer[][] array,boolean turno) {
 		super("Buscaminas");
 		setSize(500, 500);
-		arr = array;
-		this.activo = false;
+				arr = array;
+		
+		pulsado = false;
 		setResizable(false);
 		f = new Font(Font.MONOSPACED, Font.PLAIN, 25);
 		accion = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Presionaste el botón: " + e.getActionCommand());
+				movimiento = e.getActionCommand();
 				
+				pulsado = false;
 			}
 		
 		};
@@ -41,17 +46,16 @@ public class Tablero extends JFrame {
 			for (int j = 0; j < n; j++) {
 				if(array[i][j] == -2) {
 				boton[i][j] = new JButton();
-				
-				boton[i][j].setActionCommand(Poner(i,j));
+				boton[i][j].setActionCommand("movimiento"+i+"," + j);
 				boton[i][j].addActionListener(accion);
 				
-					boton[i][j].setEnabled(turno);
+				boton[i][j].setEnabled(turno);
 				
 				boton[i][j].setFont(f);
 				add(boton[i][j]);
 				}else if (array[i][j] == -1) {
 					boton[i][j] = new JButton();
-					boton[i][j].setActionCommand(i + "-" + j);
+					boton[i][j].setActionCommand("");
 					boton[i][j].setEnabled(false);
 					boton[i][j].setFont(f);
 					boton[i][j].setText("*");
@@ -68,13 +72,7 @@ public class Tablero extends JFrame {
 		setVisible(true);
 	}
 
-	public String Poner(int x,int y) {
-		
-		pulsadox = x;
-		pulsadoy = y;
-		pulos = true;
-		return "";
-	}
+
 
 	public void Activo() {
 		if(activo) {

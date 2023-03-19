@@ -100,6 +100,7 @@ public class Jugador implements Runnable {
 	      //ENVIO DATAGRAMA AL CLIENTE
 		enviarMensaje("empieza");
 	      while(true){
+	    	  
 	    	  if(!ganador) {
 	    		  break;
 	    	  }
@@ -107,45 +108,43 @@ public class Jugador implements Runnable {
 	    		  
 	    		 
 	    		 
-				
-	    	  try {
-					actualizarTablero();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	    		  try {
+	  				actualizarTablero();
+	  			} catch (IOException e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	    	 
 	    	  enviarMensaje("mueve");
 	    	  
 		      System.out.println(" Esperando Datagrama...");
 		      // RECIBO DATAGRAMA
 		     
-		      DatagramPacket paqRecibido = null;
+		      String[] cadena = null;
 			try {
-				paqRecibido = recibirmensaje();
+				cadena = recibirmensaje().getData().toString().split(",");
 			} catch (SocketException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		      
-		      String cadena=new String(paqRecibido.getData());
-		      if(cadena.contains("movimiento") && turno && paqRecibido.getAddress().equals(Ip)) {
-		    	  int x = Integer.parseInt(cadena.substring(cadena.indexOf(':')+1, cadena.indexOf('-')));
-		       int y = Integer.parseInt(cadena.substring(cadena.indexOf('-')+1));
+		      if(cadena[0].equals("mov") && turno ) {
+		    	  int x = Integer.parseInt(cadena[1]);
+		       int y = Integer.parseInt(cadena[2]);
 		       
 		       movimiento(x, y);
 		      
 		    turno =!turno;
 			
-		    	 
-		       
-		      
-		      }
-		      try {
+		    try {
 				actualizarTablero();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		       
+		      
+		      }
+		      
 	    	  
 	    	  }}
 	}
