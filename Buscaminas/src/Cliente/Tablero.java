@@ -109,6 +109,7 @@ public class Tablero extends JFrame {
 					add(boton[i][j]);
 				}
 			}
+		repaint();
 	}
 
 	public void Activo() {
