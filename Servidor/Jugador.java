@@ -1,6 +1,5 @@
 package Servidor;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -30,6 +29,7 @@ public class Jugador implements Runnable {
 		this.turno = turno;
 		this.server = server;
 		this.puerto = i;
+
 		
 	}
 	public DatagramSocket getServer() {
@@ -58,24 +58,36 @@ public class Jugador implements Runnable {
 		// TODO Auto-generated method stub
 		int contador = 0;
 		
-		for (int i = -1; i < 1; i++) {
-			for (int j = -1; j < 1; j++) {
-				
-			if(tablero.get(x+i).get(y+j) == -1 && i != 0 && j!=0) {
+		if(tableroOculto.get(x).get(y) == -2){
+			System.out.println("Estoy contando..");
+		
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (i+x<0 || i+x>1 ||j+y<0||j+y>1 ) {
+					
+				}		else {
+			if(tablero.get(x+i).get(y+j) == -1 ) {
 				contador++;
 				
 			}
 			}}
+			
+		}
+		tableroOculto.get(x).set(y, contador);
 			if(contador==0) {
 				
-				for (int i = -1; i < 1; i++) {
-					for (int j = -1; j < 1; j++) {
-						
-						revelar(x+i,y+j);
-					}
-			}}
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						if (i+x<0 || i+x>1 ||j+y<0||j+y>1 ) {
+						}else{revelar(x+i,y+j);
+					}}
+			}
+				
+			}
+	
 		
-		tableroOculto.get(x).set(y, contador);
+		
+		}
 	return contador;
 	}
 	private void revelar(int i,int o) {
@@ -89,12 +101,17 @@ public class Jugador implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-	    tableroOculto = tablero;
-		for (int i = 0; i < tableroOculto.size(); i++) {
-			for (int j = 0; j < tableroOculto.size(); j++) {
-			tableroOculto.get(i).set(j, -2);
+	 
+	   tableroOculto = new ArrayList<>();
+	   
+		for (int i = 0; i < tablero.size(); i++) {
+			ArrayList<Integer> a = new ArrayList<>();
+			for (int j = 0; j < tablero.size(); j++) {
+			a.add(-2);
 
 			}
+			tableroOculto.add(a);
+			System.out.println(tablero.get(i));
 			}
 	      
 	      //ENVIO DATAGRAMA AL CLIENTE
@@ -119,25 +136,17 @@ public class Jugador implements Runnable {
 	    	 
 	    	  
 	    	  
-		      System.out.println(" Esperando Datagrama...");
+		      System.out.println(" Esperando movimiento...");
 		      // RECIBO DATAGRAMA
-		     try {
-				actualizarTablero();
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+		    
 		      String[] cadena = null;
-			try {
-				cadena = recibirmensaje().getData().toString().split(",");
-			} catch (SocketException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			
+				cadena = (new String(recibirmensaje().getData())).split(",");
+
+			System.out.println("Recibido");
 		      if(cadena[0].equals("mov")  ) {
 		    	  int x = Integer.parseInt(cadena[1]);
-		       int y = Integer.parseInt(cadena[2]);
+		       int y = Integer.parseInt(cadena[2].toString());
 		       
 		       try {
 				movimiento(x, y);
@@ -146,14 +155,19 @@ public class Jugador implements Runnable {
 				e1.printStackTrace();
 			}
 		      
+		       turno = false;
 		    
 			
 		    
-		    
+		      }else {
+		    	  System.out.println("nu c");
+		      }
 		      }
 		      
 	    	  
-	    	  }
+	    	  
+	    	  
+	    	  
 	    	  }
 	}
 	      
@@ -164,16 +178,16 @@ public class Jugador implements Runnable {
 	private void movimiento(int x, int y) throws IOException {
 		// TODO Auto-generated method stub
 		
-		
+		System.out.println("voy a contar esto, aquí hay "+ tablero.get(x).get(y));
 		 if (tablero.get(x).get(y) == -1) {
 			 
 			 enviarMensaje("resultado,bomba,");
-		 }else {
+		 }else if (tablero.get(x).get(y) == -2){
 			 enviarMensaje("resultado,np,");
 			 contar(x,y);
 		 }
 		actualizarTablero();
-		turno =!turno;
+		
 		       
 		
 		
@@ -192,7 +206,7 @@ public class Jugador implements Runnable {
         	enviarMensaje(enviado);
 		}
 	}
-	private static DatagramPacket recibirmensaje() throws SocketException {
+	private static DatagramPacket recibirmensaje()  {
 		
 	    byte[] buffer = new byte[1024];
 	    String mensaje = "";

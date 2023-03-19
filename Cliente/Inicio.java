@@ -67,17 +67,20 @@ while(true) {
 	
 
 	}else if(cadena[0].equals("mueve")) {
-		tablero.pulsado = false;
+		tablero.movimiento = "";
   turno = true;
   actualizartablero();
   System.out.println("pulsa una tecla");
-  
-  while(!tablero.pulsado) {
-	System.out.println("."); 
-  
+  String dd = "";
+    while(dd == tablero.getmov()) {
+
+    	System.out.println(".");
+
   }
-  enviarMensaje(tablero.movimiento);
-  
+    
+    System.out.println("envio");
+	  enviarMensaje(tablero.getmov());
+	  turno = false;
 	 
 	
   
@@ -161,6 +164,7 @@ private static void actualizartablero () throws IOException {
 			
 		}
 		tablero.pintar(array, turno);
+		System.out.println("actualizado");
 		}
 		  
 	   
@@ -197,9 +201,9 @@ private static String recibirmensaje() {
 
 private static void enviarMensaje(String mensaje) {
 	
-	
+	mensaje+=",";
     byte[] datos = mensaje.getBytes();
-    
+    System.out.println("envio "+mensaje);
     try {
         // Crea un objeto DatagramSocket para enviar y recibir paquetes de datos
         DatagramSocket socket = server;
@@ -212,7 +216,7 @@ private static void enviarMensaje(String mensaje) {
         
         // Utiliza el método send del objeto DatagramSocket para enviar el paquete de datos al destinatario
         socket.send(paquete);
-        turno =false;
+        
         // Cierra el objeto DatagramSocket
       
         System.out.println("enviado");

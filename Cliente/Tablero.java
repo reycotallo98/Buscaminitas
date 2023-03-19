@@ -29,16 +29,20 @@ public class Tablero extends JFrame {
 		super("Buscaminas");
 		setSize(500, 500);
 		array = arr;
-		
+		movimiento ="";
 		pulsado = false;
 		setResizable(false);
 		f = new Font(Font.MONOSPACED, Font.PLAIN, 25);
 		accion = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Presionaste el botón: " + e.getActionCommand());
+				if (!pulsado) {
 				movimiento = e.getActionCommand();
 				
+				System.out.println("Presionaste el botón: " + movimiento);
 				pulsado = true;
+				}
+				
+				
 			}
 		
 		};
@@ -80,6 +84,9 @@ public class Tablero extends JFrame {
 		setVisible(true);
 	}
 
+	public  String getmov() {
+		return this.movimiento;
+	}
 
 	public void pintar(Integer[][] arr,boolean turno) {
 		arr = array;

@@ -30,7 +30,7 @@ public class IniServidor {
 	      
 	      if (cadena.contains("q")) {
 	      //DIRECCION ORIGEN
-	    	  Jugador nuevo = new Jugador(paqRecibido.getAddress(),false,serverSocket,paqRecibido.getPort());
+	    	  Jugador nuevo = new Jugador(paqRecibido.getAddress(),false,serverSocket,paqRecibido.getPort() );
 	    	  System.out.println("nuevo jugador");
 	    	  for(Servidor partida : partidas) {
 	    	  if (partida.players<2) {
@@ -54,10 +54,11 @@ public class IniServidor {
 		    				  
 		    				  
 	    				  }
+	    				  System.out.println(ll.toString());
 	    				  a.add(ll);
 	    				  }
 	    			  partida.tablero = a;
-	    			  
+	    			 
 	    			  break;
 	    		  }else if(partida.players<2){
 	    			  partida.jugador2=nuevo;
@@ -67,6 +68,7 @@ public class IniServidor {
 	    			  nevo.run();
 	    			  break;
 	    		  }else {
+	    			 
 	    			  partidas.add(new Servidor());
 	    		  }
 	    		

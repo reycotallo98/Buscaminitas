@@ -16,6 +16,7 @@ public Servidor( ) {
 }
 @Override
 public void run() {
+	System.out.println(tablero);
 	jugador1.tablero = tablero;
 	jugador2.tablero = tablero;
 	jugador1.turno = true;
@@ -32,26 +33,14 @@ public void run() {
 		while(jugador1.turno ) {
 			
 			
-			try {
-				juga2.wait();
-				juga1.notify();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			jugador2.turno = false;
 		}
 		jugador2.turno = true;
 		
 		while(jugador2.turno ) {
 			
-			try {
-				juga2.notify();
-				juga1.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			jugador1.tableroOculto = jugador2.tableroOculto;
+			
+			jugador1.turno = false;
 		}
 		jugador1.turno = true;
 		if(jugador1.ganador == false) {
