@@ -24,25 +24,35 @@ public void run() {
 	Thread juga2 = new Thread(jugador1);
 	// TODO Auto-generated method stub
 	
-	juga1.run();
-	juga2.run();
+	juga1.start();
+	juga2.start();
 	
 	while(true) {
 		
 		jugador2.tableroOculto = jugador1.tableroOculto;
-		while(jugador1.turno ) {
+		while(jugador1.getTurno() ) {
 			
 			
-			jugador2.turno = false;
+			try {
+				juga2.wait(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		jugador2.turno = true;
+		jugador2.setTurno(true);
 		
-		while(jugador2.turno ) {
+		while(jugador2.getTurno() ) {
 			
 			
-			jugador1.turno = false;
+			try {
+				juga1.wait(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		jugador1.turno = true;
+		jugador1.setTurno(true);
 		if(jugador1.ganador == false) {
 			jugador2.ganar();
 			jugador1.perder();

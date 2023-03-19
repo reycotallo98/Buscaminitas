@@ -63,12 +63,13 @@ while(true) {
 
 
 
-	
+	turno = true;
 	
 
 	}else if(cadena[0].equals("mueve")) {
 		tablero.movimiento = "";
-  turno = true;
+  
+		if (turno) {
   actualizartablero();
   System.out.println("pulsa una tecla");
   String dd = "";
@@ -80,9 +81,8 @@ while(true) {
     
     System.out.println("envio");
 	  enviarMensaje(tablero.getmov());
-	  turno = false;
-	 
-	
+	 turno = false;
+		}
   
   
 }else if(cadena[0].equals("resultado")){

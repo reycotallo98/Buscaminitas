@@ -114,8 +114,7 @@ public class Jugador implements Runnable {
 			System.out.println(tablero.get(i));
 			}
 	      
-	      //ENVIO DATAGRAMA AL CLIENTE
-		enviarMensaje("empieza,");
+	  
 		
   	 
 	      while(true){
@@ -124,7 +123,7 @@ public class Jugador implements Runnable {
 	    		  break;
 	    	  }
 	    	  if (turno) {
-	    		  
+	    		  enviarMensaje("empieza");
 	    		  enviarMensaje("mueve,");
 	    		 
 	    		  try {
@@ -155,7 +154,7 @@ public class Jugador implements Runnable {
 				e1.printStackTrace();
 			}
 		      
-		       turno = false;
+		       
 		    
 			
 		    
@@ -187,7 +186,7 @@ public class Jugador implements Runnable {
 			 contar(x,y);
 		 }
 		actualizarTablero();
-		
+		turno = false;
 		       
 		
 		
