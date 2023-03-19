@@ -23,7 +23,7 @@ public class Inicio {
   private static DatagramSocket server;
   private static Integer[][] array = new Integer[8][8];
   private static boolean turno;
-  private static Tablero tablero;
+  private static Tablero tablero ;
 public static void main(String[] args) throws IOException, URISyntaxException {
 	 server = new DatagramSocket(3000);
 	
@@ -39,7 +39,7 @@ array[i][j] = -2;
 
 }
 }
-Tablero tablero = null;
+tablero = new Tablero(array, false);
 
 enviarMensaje("q");
 System.out.println("Esperando oponente....");
@@ -63,7 +63,7 @@ while(true) {
 
 	
 
-	tablero = new Tablero(array, turno);
+	
 	
 
 	}else if(cadena[0].equals("mueve")) {
@@ -72,7 +72,7 @@ while(true) {
   actualizartablero();
   System.out.println("pulsa una tecla");
   while(!tablero.pulsado) {
-	 
+	System.out.println("."); 
   
   }
   enviarMensaje(tablero.movimiento);

@@ -75,8 +75,8 @@ public class Jugador implements Runnable {
 					}
 			}}
 		
-		return contador;
-	
+		tableroOculto.get(x).set(y, contador);
+	return contador;
 	}
 	private void revelar(int i,int o) {
 		int contado = contar(i,o);
@@ -144,14 +144,15 @@ public class Jugador implements Runnable {
 				e1.printStackTrace();
 			}
 		      
-		    turno =!turno;
+		    
 			
 		    
 		    
 		      }
 		      
 	    	  
-	    	  }}
+	    	  }
+	    	  }
 	}
 	      
 		
@@ -160,8 +161,7 @@ public class Jugador implements Runnable {
 	
 	private void movimiento(int x, int y) throws IOException {
 		// TODO Auto-generated method stub
-		 
-		 tableroOculto.get(x).set(y,contar(x,y) );
+		 contar(x,y);
 		 if (tablero.get(x).get(y) == -1) {
 			 
 			 enviarMensaje("resultado,bomba,");
@@ -169,7 +169,7 @@ public class Jugador implements Runnable {
 			 enviarMensaje("resultado,np,");
 		 }
 		actualizarTablero();
-		
+		turno =!turno;
 		       
 		
 		

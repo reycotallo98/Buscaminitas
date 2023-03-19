@@ -23,7 +23,7 @@ public class Tablero extends JFrame {
 	int pulsadoy;
 	public String movimiento;
 	boolean pulsado;
-	
+	JButton[][] botones = new JButton[8][8];
 
 	public Tablero(Integer[][] arr,boolean turno) {
 		super("Buscaminas");
@@ -58,6 +58,7 @@ public class Tablero extends JFrame {
 				
 				
 				add(boton[i][j]);
+				botones[i][j] = boton[i][j];
 				}else if (array[i][j] == -1) {
 					boton[i][j] = new JButton();
 					boton[i][j].setActionCommand("");
@@ -65,12 +66,14 @@ public class Tablero extends JFrame {
 					
 					boton[i][j].setText("*");
 					add(boton[i][j]);
+					botones[i][j] = boton[i][j];
 				}else {
 					boton[i][j] = new JButton();
 					boton[i][j].setEnabled(false);
 					
 					boton[i][j].setText(array[i][j]+"");
 					add(boton[i][j]);
+					botones[i][j] = boton[i][j];
 				}
 			}
 		repaint();
@@ -83,37 +86,37 @@ public class Tablero extends JFrame {
 		activo = turno;
 		Activo();
 		setVisible(false);
-		boton = new JButton[n][n];
-		setLayout(new GridLayout(n, n));
+		
+
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++) {
 				if(array[i][j] == -2) {
-				boton[i][j] = new JButton();
-				boton[i][j].setActionCommand("mov,"+i+"," + j);
-				boton[i][j].addActionListener(accion);
-				boton[i][j].setEnabled(turno);
+				
+				botones[i][j].setActionCommand("mov,"+i+"," + j);
+				botones[i][j].addActionListener(accion);
+				botones[i][j].setEnabled(turno);
 				if(turno) {
-				boton[i][j].setBackground(Color.blue);
+				botones[i][j].setBackground(Color.blue);
 				}else{
 
-					boton[i][j].setBackground(Color.red);
+					botones[i][j].setBackground(Color.red);
 				}
 				
 				
-				add(boton[i][j]);
+				
 				}else if (array[i][j] == -1) {
-					boton[i][j] = new JButton();
-					boton[i][j].setActionCommand("");
-					boton[i][j].setEnabled(false);
+					
+					botones[i][j].setActionCommand("");
+					botones[i][j].setEnabled(false);
 					
 					boton[i][j].setText("*");
-					add(boton[i][j]);
-				}else {
-					boton[i][j] = new JButton();
-					boton[i][j].setEnabled(false);
 					
-					boton[i][j].setText(array[i][j]+"");
-					add(boton[i][j]);
+				}else {
+					
+					botones[i][j].setEnabled(false);
+					
+					botones[i][j].setText(array[i][j]+"");
+				
 				}
 			}
 		repaint();
