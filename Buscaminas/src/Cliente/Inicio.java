@@ -60,8 +60,8 @@ while(true) {
 
 	
 	actualizartablero();
+	 
 	
-
 
 	}else if(cadena.contains("mueve")) {
   turno = true;
@@ -71,6 +71,10 @@ while(true) {
   
   }
   enviarMensaje(tablero.movimiento);
+  actualizartablero();
+	 
+	tablero = new Tablero(array, turno);
+  turno =!turno;
 }else if(cadena.contains("resultado")){
 	
 	String men = cadena.substring(cadena.indexOf(":")+1);
@@ -119,7 +123,9 @@ while(true) {
 //	for (Integer[] integers : au) {
 //		array[integers[0]][integers[1]] = 0;
 //	}
-	}}
+	}
+	
+	}
 }
 		
 		

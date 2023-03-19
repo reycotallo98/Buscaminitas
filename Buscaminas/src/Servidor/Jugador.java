@@ -92,7 +92,7 @@ public class Jugador implements Runnable {
 	    tableroOculto = tablero;
 		for (int i = 0; i < tableroOculto.size(); i++) {
 			for (int j = 0; j < tableroOculto.size(); j++) {
-			tableroOculto.get(i).set(j, -3);
+			tableroOculto.get(i).set(j, -2);
 
 			}
 			}
