@@ -22,7 +22,7 @@ public class Jugador implements Runnable {
 	int puerto;
 	ArrayList<ArrayList<Integer>> tablero;
 	ArrayList<ArrayList<Integer>> tableroOculto;
-	
+
 	boolean ganador = true;
 	public Jugador(InetAddress ip, Boolean turno, DatagramSocket server, int i) {
 		super();
@@ -163,12 +163,14 @@ public class Jugador implements Runnable {
 	
 	private void movimiento(int x, int y) throws IOException {
 		// TODO Auto-generated method stub
-		 contar(x,y);
+		
+		
 		 if (tablero.get(x).get(y) == -1) {
 			 
 			 enviarMensaje("resultado,bomba,");
 		 }else {
 			 enviarMensaje("resultado,np,");
+			 contar(x,y);
 		 }
 		actualizarTablero();
 		turno =!turno;

@@ -63,7 +63,8 @@ public class IniServidor {
 	    			  partida.jugador2=nuevo;
 	    			  partida.players++;
 	    			  partida.players = partida.players +1;
-	    			  partida.run();
+	    			  Thread nevo = new Thread(partida);
+	    			  nevo.run();
 	    			  break;
 	    		  }else {
 	    			  partidas.add(new Servidor());

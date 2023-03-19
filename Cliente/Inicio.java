@@ -71,6 +71,7 @@ while(true) {
   turno = true;
   actualizartablero();
   System.out.println("pulsa una tecla");
+  
   while(!tablero.pulsado) {
 	System.out.println("."); 
   
@@ -79,8 +80,8 @@ while(true) {
   
 	 
 	
-  turno =!turno;
-  actualizartablero();
+  
+  
 }else if(cadena[0].equals("resultado")){
 	
 	if (cadena[1].equals("np")) {
@@ -211,7 +212,7 @@ private static void enviarMensaje(String mensaje) {
         
         // Utiliza el método send del objeto DatagramSocket para enviar el paquete de datos al destinatario
         socket.send(paquete);
-        
+        turno =false;
         // Cierra el objeto DatagramSocket
       
         System.out.println("enviado");
