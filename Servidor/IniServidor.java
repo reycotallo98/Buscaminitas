@@ -39,11 +39,13 @@ public class IniServidor {
 	    			  partida.players = partida.players +1;
 	    			  System.out.println("Nueva partida");
 	    			  ArrayList<ArrayList<Integer>> a = new ArrayList<>();
+	    			  
 	    			  for(int i = 0; i < 8;i++ ) {
 	    				  ArrayList<Integer> ll = new ArrayList<>();
+	    				  int num = (int) (Math.random()*7);
 	    				  for(int b = 0; b < 8;b++ ) {
 	    					  
-		    				  if(b < ((int)(Math.random()*7))) {
+		    				  if(b < num) {
 		    					  ll.add(-1);
 		    				  }else {
 		    					  ll.add(-2);

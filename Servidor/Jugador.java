@@ -92,14 +92,15 @@ public class Jugador implements Runnable {
 	    tableroOculto = tablero;
 		for (int i = 0; i < tableroOculto.size(); i++) {
 			for (int j = 0; j < tableroOculto.size(); j++) {
-			tableroOculto.get(i).set(j, -3);
+			tableroOculto.get(i).set(j, -2);
 
 			}
 			}
 	      
 	      //ENVIO DATAGRAMA AL CLIENTE
-		enviarMensaje("empieza");
+		enviarMensaje("empieza,");
 	      while(true){
+	    	  
 	    	  if(!ganador) {
 	    		  break;
 	    	  }
@@ -107,45 +108,48 @@ public class Jugador implements Runnable {
 	    		  
 	    		 
 	    		 
-				
-	    	  try {
-					actualizarTablero();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	    	  enviarMensaje("mueve");
+	    		  try {
+	  				actualizarTablero();
+	  			} catch (IOException e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	    	 
+	    	  enviarMensaje("mueve,");
 	    	  
 		      System.out.println(" Esperando Datagrama...");
 		      // RECIBO DATAGRAMA
-		     
-		      DatagramPacket paqRecibido = null;
+		     try {
+				actualizarTablero();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		      String[] cadena = null;
 			try {
-				paqRecibido = recibirmensaje();
+				cadena = recibirmensaje().getData().toString().split(",");
 			} catch (SocketException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		      
-		      String cadena=new String(paqRecibido.getData());
-		      if(cadena.contains("movimiento") && turno && paqRecibido.getAddress().equals(Ip)) {
-		    	  int x = Integer.parseInt(cadena.substring(cadena.indexOf(':')+1, cadena.indexOf('-')));
-		       int y = Integer.parseInt(cadena.substring(cadena.indexOf('-')+1));
+			
+		      if(cadena[0].equals("mov")  ) {
+		    	  int x = Integer.parseInt(cadena[1]);
+		       int y = Integer.parseInt(cadena[2]);
 		       
-		       movimiento(x, y);
+		       try {
+				movimiento(x, y);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		      
 		    turno =!turno;
 			
-		    	 
-		       
-		      
+		    
+		    
 		      }
-		      try {
-				actualizarTablero();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		      
 	    	  
 	    	  }}
 	}
@@ -154,17 +158,17 @@ public class Jugador implements Runnable {
 	
 	
 	
-	private void movimiento(int x, int y) {
+	private void movimiento(int x, int y) throws IOException {
 		// TODO Auto-generated method stub
 		 
 		 tableroOculto.get(x).set(y,contar(x,y) );
 		 if (tablero.get(x).get(y) == -1) {
 			 
-			 enviarMensaje("bomba");
+			 enviarMensaje("resultado,bomba,");
 		 }else {
-			 enviarMensaje("np");
+			 enviarMensaje("resultado,np,");
 		 }
-		
+		actualizarTablero();
 		
 		       
 		
@@ -174,11 +178,11 @@ public class Jugador implements Runnable {
 		       
 	public void actualizarTablero() throws IOException {
 		 // Creamos el socket y establecemos la conexión con el servidor
-        for (ArrayList<Integer> arrayList : tablero) {
+        for (ArrayList<Integer> arrayList : tableroOculto) {
 			String enviado="";
         	for (Integer integer : arrayList) {
-				enviado += integer;
-				enviado += "-";
+				enviado += integer.toString();
+				enviado += ",";
 			}
         	
         	enviarMensaje(enviado);
@@ -207,7 +211,7 @@ public class Jugador implements Runnable {
 	        System.out.println("Mensaje recibido: " + mensaje);
 	        
 	        // Cierra el objeto DatagramSocket
-	        socket.close();
+	       
 	        
 	    } catch (Exception e) {
 	        System.out.println("Error al recibir el mensaje: " + e.getMessage());
@@ -234,7 +238,7 @@ public class Jugador implements Runnable {
 	        socket.send(paquete);
 	        
 	        // Cierra el objeto DatagramSocket
-	        socket.close();
+	        
 	        System.out.println("enviado");
 	    } catch (SocketException e) {
 	        System.out.println("Error al crear el objeto DatagramSocket: " + e.getMessage());

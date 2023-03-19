@@ -22,22 +22,24 @@ import javax.swing.JOptionPane;
 public class Inicio {
   private static DatagramSocket server;
   private static Integer[][] array = new Integer[8][8];
+  private static boolean turno;
+  private static Tablero tablero;
 public static void main(String[] args) throws IOException, URISyntaxException {
 	 server = new DatagramSocket(3000);
-	 new ServerSocket(3300);
+	
 	 
 	  byte[] recibidos=new byte[1024];
 	    byte[] enviados=new byte[1024];
-	    String cadena;
-	    boolean turno = false;
+	    String[] cadena;
+	    turno = false;
 		boolean jugando = false;
 			for (int i = 0; i < array.length; i++) {
 for (int j = 0; j < array.length; j++) {
-array[i][j] = -3;
+array[i][j] = -2;
 
 }
 }
-Tablero tablero;
+Tablero tablero = null;
 
 enviarMensaje("q");
 System.out.println("Esperando oponente....");
@@ -52,25 +54,39 @@ System.out.println("Esperando oponente....");
 
 
 while(true) {
-	cadena= recibirmensaje(); 
+	
+	cadena= recibirmensaje().split(","); 
 	  
-	if (cadena.contains("empieza")){
+	if (cadena[0].equals("empieza")){
 		
 	System.out.println("Empiezo");
 
 	
-	actualizartablero();
+
 	tablero = new Tablero(array, turno);
-
-
-	}else if(cadena.contains("mueve")) {
-  turno = true;
-  
-  
-  
-}else if(cadena.contains("resultado")){
 	
-	String men = cadena.substring(cadena.indexOf(":")+1);
+
+	}else if(cadena[0].equals("mueve")) {
+		tablero.pulsado = false;
+  turno = true;
+  actualizartablero();
+  System.out.println("pulsa una tecla");
+  while(!tablero.pulsado) {
+	 
+  
+  }
+  enviarMensaje(tablero.movimiento);
+  
+	 
+	
+  turno =!turno;
+  actualizartablero();
+}else if(cadena[0].equals("resultado")){
+	
+	if (cadena[1].equals("np")) {
+		actualizartablero();
+	}else {
+	String men = cadena[1];
 	int opcion = JOptionPane.showConfirmDialog(null, "Has "+men+"¿Quieres volver a jugar?", "Sí", JOptionPane.OK_CANCEL_OPTION);
 
 	if(opcion == JOptionPane.OK_OPTION) {
@@ -94,7 +110,7 @@ while(true) {
 	} else {
 	    // el usuario ha pulsado Cancelar
 		System.exit(0);
-	}
+	}}
 //}else if(cadena.contains("revelado")) {
 //	String sub = cadena.substring(cadena.indexOf(":"));
 //	String aux = "";
@@ -116,7 +132,9 @@ while(true) {
 //	for (Integer[] integers : au) {
 //		array[integers[0]][integers[1]] = 0;
 //	}
-	}}
+	}
+	
+	}
 }
 		
 		
@@ -131,20 +149,17 @@ while(true) {
 private static void actualizartablero () throws IOException {
 	   
 		for (int i = 0; i < array.length; i++) {
-	String a = recibirmensaje();
+	String[] a = recibirmensaje().split(",");
+	
+	
 			for (int j = 0; j < array.length; j++) {
-				int contador = 0;
-				String num="";
-				while (a.charAt(contador) != '-' || contador+1 > a.length()) {
-					
-					num+=a.charAt(contador);
-					contador++;
-				}
-				a.split(num+'-');
-				array[i][j] = Integer.parseInt(num);
+				
+				
+				array[i][j] = Integer.parseInt(a[j]);
 			}
 			
 		}
+		tablero.pintar(array, turno);
 		}
 		  
 	   
@@ -166,7 +181,7 @@ private static String recibirmensaje() {
         
         // Convierte los datos recibidos en el tipo de dato adecuado para su procesamiento
         mensaje = new String(paquete.getData());
-        
+        mensaje.split("");
         // Imprime el mensaje recibido
         System.out.println("Mensaje recibido: " + mensaje);
         
