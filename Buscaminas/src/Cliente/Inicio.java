@@ -60,12 +60,12 @@ while(true) {
 
 	
 	actualizartablero();
-	tablero = new Tablero(array, turno);
+	
 
 
 	}else if(cadena.contains("mueve")) {
   turno = true;
-  
+  tablero = new Tablero(array, turno);
   
   
 }else if(cadena.contains("resultado")){

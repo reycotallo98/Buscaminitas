@@ -174,7 +174,7 @@ public class Jugador implements Runnable {
 		       
 	public void actualizarTablero() throws IOException {
 		 // Creamos el socket y establecemos la conexión con el servidor
-        for (ArrayList<Integer> arrayList : tablero) {
+        for (ArrayList<Integer> arrayList : tableroOculto) {
 			String enviado="";
         	for (Integer integer : arrayList) {
 				enviado += integer.toString();
