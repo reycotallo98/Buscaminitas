@@ -99,6 +99,8 @@ public class Jugador implements Runnable {
 	      
 	      //ENVIO DATAGRAMA AL CLIENTE
 		enviarMensaje("empieza,");
+		
+  	 
 	      while(true){
 	    	  
 	    	  if(!ganador) {
@@ -106,7 +108,7 @@ public class Jugador implements Runnable {
 	    	  }
 	    	  if (turno) {
 	    		  
-	    		 
+	    		  enviarMensaje("mueve,");
 	    		 
 	    		  try {
 	  				actualizarTablero();
@@ -115,7 +117,7 @@ public class Jugador implements Runnable {
 	  				e.printStackTrace();
 	  			}
 	    	 
-	    	  enviarMensaje("mueve,");
+	    	  
 	    	  
 		      System.out.println(" Esperando Datagrama...");
 		      // RECIBO DATAGRAMA

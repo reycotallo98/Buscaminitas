@@ -61,7 +61,7 @@ while(true) {
 		
 	System.out.println("Empiezo");
 
-	
+
 
 	
 	
@@ -147,10 +147,10 @@ while(true) {
   
   
 private static void actualizartablero () throws IOException {
-	   
+	   System.out.println("actualizando");
 		for (int i = 0; i < array.length; i++) {
 	String[] a = recibirmensaje().split(",");
-	
+	System.out.println(i);
 	
 			for (int j = 0; j < array.length; j++) {
 				

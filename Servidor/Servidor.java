@@ -23,9 +23,9 @@ public void run() {
 	jugador2.run();
 	jugador1.turno = true;
 	while(true) {
-		jugador1.turno = true;
+		
 		jugador1.tableroOculto = jugador2.tableroOculto;
-		while(jugador1.turno != true) {
+		while(jugador1.turno ) {
 			
 			
 			if(jugador1.ganador == false) {
