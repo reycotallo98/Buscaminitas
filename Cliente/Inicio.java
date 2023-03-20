@@ -67,9 +67,10 @@ while(true) {
 	
 
 	}else if(cadena[0].equals("mueve")) {
-		tablero.movimiento = "";
-  
+		
+   turno = true;
 		if (turno) {
+			tablero.movimiento = "";
   actualizartablero();
   System.out.println("pulsa una tecla");
   String dd = "";

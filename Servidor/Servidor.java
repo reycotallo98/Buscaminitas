@@ -47,7 +47,7 @@ public void run() {
 		
 		jugador1.setTurno(true);
 		vamos(jugador1);
-		jugador1.setTurno(true);
+		jugador2.setTurno(true);
 		vamos(jugador2);
 		if(jugador1.ganador == false) {
 		ganar(jugador2);
