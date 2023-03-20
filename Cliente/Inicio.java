@@ -63,7 +63,7 @@ while(true) {
 
 
 
-	turno = true;
+	
 	
 
 	}else if(cadena[0].equals("mueve")) {
@@ -81,7 +81,7 @@ while(true) {
     
     System.out.println("envio");
 	  enviarMensaje(tablero.getmov());
-	 turno = false;
+	
 		}
   
   
@@ -111,10 +111,11 @@ while(true) {
 		ProcessBuilder builder = new ProcessBuilder(command);
 		builder.start();
 		System.exit(0);
-	} else {
+	} if (cadena[0].equals("empieza")){ {
 	    // el usuario ha pulsado Cancelar
 		System.exit(0);
-	}}
+	}
+	}
 //}else if(cadena.contains("revelado")) {
 //	String sub = cadena.substring(cadena.indexOf(":"));
 //	String aux = "";
@@ -138,7 +139,10 @@ while(true) {
 //	}
 	}
 	
-	}
+	}else if (cadena[0].equals("espera")){
+		turno = false;
+		tablero.setTitle("Esperando movimiento del oponente");
+	}}
 }
 		
 		
